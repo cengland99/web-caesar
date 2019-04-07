@@ -1,13 +1,17 @@
-from flask import Flask
+from flask import Flask, request
 from caesar import rotate_string
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-@app.route("/")
-def display_form_inputs():
-    return """
-    <!DOCTYPE html>
+# Within encrypt, store the values of these request parameters in local variables, 
+# converting data types as necessary. Then, encrypt the value of the text 
+# parameter using rotate_string. Return the encrypted string wrapped in <h1> tags,
+# to be rendered in the browser.
+
+   
+form = """
+<!DOCTYPE html>
 
 <html>
     <head>
@@ -50,5 +54,15 @@ def display_form_inputs():
 </html>
     
     """
+
+@app.route("/")
+def display_form_inputs():
+    return form
+
+@app.route("/", methods = ['POST'])
+def encrypt():
+    rot = int(request.form['rot'])
+    text = request.form['text']    
+    return form.format(rotate_string(text,rot))
 
 app.run()
